@@ -1,6 +1,13 @@
-install.packages('rvest')
+
+#install.packages('rvest')
+#install.packages('httr')
+#install.packages('jsonlite')
 
 library('rvest')
+library('httr')
+library('jsonlite')
+library(stringr)
+
 
 #Metod för att generera url beroende på månad
 generate_url <- function(month){
@@ -24,7 +31,26 @@ get_raw_data_teams <- function(url)
   return(teams)
 }
 
-#Met
+
+get_teams <- function(url){
+  #Reading the HTML code from the website
+  teams <- get_raw_data_teams(url)
+  
+  #Seperate into home and away teams
+  index <- length(teams)
+  home <- teams[seq(1, index, 2)]
+  away <- teams[seq(2, index, 2)]
+  
+  #Make teams to data.frame
+  teams_data <- structure(data.frame( home, away))
+  
+  #Add ID to data.frames
+  teams_data$Id <- seq.int(nrow(teams_data))
+  return(teams_data)
+}
+
+
+#Get raw data for teams
 get_raw_data_scores <- function(url){
   webpage <- read_html(url)
   score_raw <- html_nodes(webpage, '.s-scoreText') 
@@ -50,20 +76,10 @@ scores_values_to_numeric <- function(scores_data){
   return(scores_data)
 }
 
-generate_data <- function(url)
-{
+
+get_scores <- function(url){
   #Reading the HTML code from the website
-  teams <- get_raw_data_teams(url)
   scores <- get_raw_data_scores(url)
-  
-  #Seperate into home and away teams
-  index <- length(teams)
-  home <- teams[seq(1, index, 2)]
-  
-  away <- teams[seq(2, index, 2)]
-  
-  #Make teams to data.frame
-  teams_data <- structure(data.frame( home, away))
   
   #Make scores into data.frame
   scores_data <- scores_to_data_frame(scores = scores)
@@ -73,7 +89,68 @@ generate_data <- function(url)
   
   #Add ID to data.frames
   scores_data$Id <- seq.int(nrow(scores_data))
-  teams_data$Id <- seq.int(nrow(teams_data))
+  return(scores_data)
+}
+
+get_raw_date <- function(url){
+  webpage <- read_html(url)
+  dates_raw <- html_nodes(webpage, '.mu-i-datetime')
+  dates <- html_text(dates_raw)
+  return(dates)
+}
+
+convert_dates_to_readable <- function(dates, citys)
+{
+  dates_clean <- sapply(strsplit(dates,"-"), `[`, 1)
+  
+  day <- sapply(strsplit(dates_clean, " "), `[`, 1)
+  year <- sapply(strsplit(dates_clean, " "), `[`, 3)
+  
+  date_input <- paste(year, '-', month, "-", day, sep = "")
+}
+
+get_raw_city <- function(url){
+  webpage <- read_html(url)
+  city_raw <- html_nodes(webpage, '.mu-i-venue')
+  city <-  html_text(city_raw)
+  return(city)
+}
+
+#Metod för att hämta tempratur
+get_weather_from_api <- function(clean_dates, citys){
+  temp_vector <- c()
+  
+  for(i in 0:length(citys)){
+    basePath <- 'https://api.worldweatheronline.com/premium/v1/past-weather.ashx?key=b9894c56b5914eb2876112655180906&'
+    date <- dates_clean[i]
+    city <- citys[i]
+    url <- paste(basePath, 'q=', str_trim(city), sep = "")
+    url <- paste(url,'&format=json&date=', sep = "" )
+    url <- paste(url, date, sep = "")
+    raw_response <- GET(URLencode(url))
+    response <- content(raw_response, encoding = "application/x-www-form-urlencoded")
+    temprature <- as.numeric(response$data$weather[[1]]$maxtempC)
+    temp_vector <- append(temp_vector, temprature)
+  }
+  
+  return(temp_vector)
+}
+
+get_weather <- function(url, month){
+  dates <- get_raw_date(url)
+  clean_dates <- convert_dates_to_readable(url, month)
+  city <- get_raw_city(url)
+  tempratures <- get_weather_from_api(clean_dates = clean_dates, citys = city)
+  #Massage data
+  #rteurn data
+  
+}
+
+generate_data <- function(url)
+{
+
+  teams_data <- get_teams(url)
+  scores_data <- get_scores(url)
   
   #Merge datasets
   merged_set <- merge(teams_data, scores_data, by = "Id")
