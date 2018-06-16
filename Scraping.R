@@ -206,3 +206,7 @@ complete_data <- data.frame(home = character(),
 complete_data <- get_complete_data(months = months, complete_data = complete_data)
 
 
+write.csv(complete_data, file = 'complete_data.csv', row.names = FALSE)
+
+
+
