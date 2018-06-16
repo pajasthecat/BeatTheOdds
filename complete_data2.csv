@@ -1,0 +1,27 @@
+"Id","home","away","homeGoal","awayGoal","under10","over10under20","over20under30","over30"
+1,"Sri Lanka","Bhutan",0,1,0,0,0,1
+2,"Timor-Leste","Mongolia",0,3,0,1,0,0
+3,"Cambodia","Macau",3,0,0,0,0,1
+4,"Yemen","Pakistan",3,1,0,0,1,0
+5,"India","Nepal",2,0,0,0,0,1
+6,"Chinese Taipei","Brunei Darussalam",0,1,0,0,1,0
+7,"Nepal","India",0,0,0,0,1,0
+8,"Mongolia","Timor-Leste",3,0,1,0,0,0
+9,"Bhutan","Sri Lanka",2,1,0,1,0,0
+10,"Macau","Cambodia",1,1,0,0,0,1
+11,"Brunei Darussalam","Chinese Taipei",0,2,0,0,0,1
+12,"Barbados","US Virgin Islands",0,1,1,0,0,0
+13,"Nicaragua","Anguilla",5,0,0,0,0,1
+14,"Pakistan","Yemen",0,0,0,1,0,0
+15,"St. Kitts and Nevis","Turks and Caicos Islands",6,2,0,0,1,0
+16,"Bahamas","Bermuda",0,5,0,0,1,0
+17,"Belize","Cayman Islands",0,0,0,0,0,1
+18,"US Virgin Islands","Barbados",0,4,0,0,1,0
+19,"British Virgin Islands","Dominica",2,3,0,0,0,1
+20,"Turks and Caicos Islands","St. Kitts and Nevis",2,6,1,0,0,0
+21,"Curacao","Montserrat",2,1,0,0,0,1
+22,"Bermuda","Bahamas",3,0,0,0,1,0
+23,"Dominica","British Virgin Islands",0,0,0,0,1,0
+24,"Anguilla","Nicaragua",0,3,0,1,0,0
+25,"Cayman Islands","Belize",1,1,0,0,0,1
+26,"Montserrat","Curacao",2,2,1,0,0,0
